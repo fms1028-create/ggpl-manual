@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GGPL新宿 自動化ツール操作マニュアル</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e63946;
+    --dark: #1a1a2e;
+    --mid: #16213e;
+    --accent: #f4a261;
+    --green: #2a9d8f;
+    --blue: #457b9d;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+    --border: #dee2e6;
+    --success: #198754;
+    --warning: #ffc107;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #ffffff;
+    color: #212529;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark);
+    color: white;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 32px;
+  }
+  .header-logo {
+    background: var(--red);
+    color: white;
+    font-weight: 900;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .header-sub {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1b2a 100%);
+    color: white;
+    padding: 60px 32px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(230,57,70,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(69,123,157,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(230,57,70,0.15);
+    border: 1px solid rgba(230,57,70,0.3);
+    color: #ff8a95;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* NAV TABS */
+  .nav-tabs-wrap {
+    background: white;
+    border-bottom: 2px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 53px;
+    z-index: 90;
+  }
+  .nav-tab {
+    padding: 16px 28px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .nav-tab:hover { color: var(--dark); }
+  .nav-tab.active {
+    color: var(--red);
+    border-bottom-color: var(--red);
+  }
+  .tab-num {
+    background: var(--border);
+    color: var(--gray);
+    font-size: 10px;
+    font-weight: 900;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-tab.active .tab-num {
+    background: var(--red);
+    color: white;
+  }
+
+  /* CONTENT SECTIONS */
+  .content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .icon-red { background: #fff0f1; }
+  .icon-blue { background: #eff6ff; }
+  .icon-green { background: #f0fdf4; }
+  .section-title { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+  .section-desc { font-size: 13px; color: var(--gray); }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+  .step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+    flex-shrink: 0;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    font-weight: 900;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+  .step.done .step-num { background: var(--green); }
+  .step-line {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+    min-height: 32px;
+  }
+  .step:last-child .step-line { display: none; }
+  .step-body {
+    padding: 4px 0 32px 16px;
+    flex: 1;
+  }
+  .step-label {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #212529;
+  }
+  .step-detail {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+
+  /* FILE CHIPS */
+  .file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #f8f9fa;
+    border: 1.5px solid #dee2e6;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #212529;
+    margin: 4px 0;
+    cursor: default;
+    transition: all 0.2s;
+  }
+  .file-chip:hover {
+    border-color: var(--red);
+    background: #fff0f1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(230,57,70,0.15);
+  }
+  .file-chip .fc-icon { font-size: 16px; }
+  .file-chip.highlight {
+    border-color: var(--red);
+    background: #fff0f1;
+    color: var(--red);
+  }
+
+  /* TERMINAL DEMO */
+  .terminal {
+    background: #0d1117;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 12px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .terminal-bar {
+    background: #1c2128;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #30363d;
+  }
+  .t-btn { width: 12px; height: 12px; border-radius: 50%; }
+  .t-red { background: #ff5f57; }
+  .t-yellow { background: #febc2e; }
+  .t-green { background: #28c840; }
+  .terminal-title { color: #8b949e; font-size: 11px; margin-left: 8px; }
+  .terminal-body {
+    padding: 16px 20px;
+    min-height: 80px;
+    color: #c9d1d9;
+    line-height: 1.8;
+  }
+  .t-line { display: block; }
+  .t-prompt { color: #57c347; }
+  .t-comment { color: #8b949e; }
+  .t-success { color: #57c347; font-weight: 700; }
+  .t-warn { color: #febc2e; }
+  .t-input { color: #79c0ff; }
+  .t-typing {
+    border-right: 2px solid #c9d1d9;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { border-color: transparent; } }
+  @keyframes ringPulse { 0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(255,68,68,0.5); } 50% { opacity:0.6; box-shadow:0 0 0 4px rgba(255,68,68,0); } }
+
+  /* DEMO BUTTON */
+  .demo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .demo-btn:hover { background: var(--red); transform: translateY(-1px); }
+  .demo-btn:active { transform: translateY(0); }
+  .demo-btn.running { background: var(--green); pointer-events: none; }
+
+  /* ALERT BOXES */
+  .alert {
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: 12px 0;
+  }
+  .alert-check { background: #f0fdf4; border-left: 4px solid var(--green); color: #166534; }
+  .alert-warn { background: #fffbeb; border-left: 4px solid var(--warning); color: #92400e; }
+  .alert-info { background: #eff6ff; border-left: 4px solid var(--blue); color: #1e3a5f; }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* INPUT DEMO */
+  .input-demo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .input-demo input {
+    background: #1c2128;
+    border: 1.5px solid #30363d;
+    border-radius: 6px;
+    color: #79c0ff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 8px 14px;
+    width: 140px;
+    outline: none;
+  }
+  .input-demo input:focus { border-color: #58a6ff; }
+  .input-demo button {
+    background: #238636;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: background 0.2s;
+  }
+  .input-demo button:hover { background: #2ea043; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { margin: 10px 0; }
+  .progress-label { font-size: 12px; color: var(--gray); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .progress-bar {
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--green), #48cae4);
+    width: 0%;
+    transition: width 0.8s ease;
+  }
+
+  /* CHECKER */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    padding: 10px 14px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .checklist li:hover { background: #fff0f1; border-color: #ffc0c5; }
+  .checklist li.checked { background: #f0fdf4; border-color: #86efac; color: #166534; }
+  .checklist li .ck-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ced4da;
+    border-radius: 5px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .checklist li.checked .ck-box {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  /* POKERWEB MOCK */
+  .pw-mock {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 12px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .pw-topbar {
+    background: #1a1a2e;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pw-logo { color: var(--red); font-weight: 900; font-size: 12px; }
+  .pw-url { background: rgba(255,255,255,0.07); border-radius: 4px; padding: 3px 10px; flex: 1; color: rgba(255,255,255,0.6); }
+  .pw-body {
+    display: flex;
+    height: 200px;
+  }
+  .pw-sidebar {
+    width: 140px;
+    background: #1a1a2e;
+    padding: 12px 0;
+    flex-shrink: 0;
+  }
+  .pw-sidebar-item {
+    padding: 8px 16px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pw-sidebar-item:hover, .pw-sidebar-item.active { background: rgba(255,255,255,0.08); color: #fca311; }
+  .pw-main {
+    flex: 1;
+    background: #f8f9fa;
+    padding: 16px;
+    overflow: hidden;
+  }
+  .pw-main-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #212529; }
+  .pw-filter-row { display: flex; gap: 6px; margin-bottom: 10px; }
+  .pw-select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 11px;
+    background: white;
+    color: #212529;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .pw-select.highlight { border-color: var(--red); background: #fff0f1; color: var(--red); font-weight: 700; }
+  .pw-table-wrap { background: white; border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; }
+  .pw-table-header { display: grid; grid-template-columns: 80px 120px 80px 100px; background: #f8f9fa; border-bottom: 1px solid #dee2e6; }
+  .pw-th { padding: 6px 10px; font-size: 10px; font-weight: 700; color: #6c757d; }
+  .pw-row { display: grid; grid-template-columns: 80px 120px 80px 100px; border-bottom: 1px solid #f0f0f0; }
+  .pw-td { padding: 6px 10px; font-size: 11px; color: #333; }
+  .pw-td.zero { color: #dc3545; }
+  .pw-empty { text-align: center; padding: 20px; color: #aaa; font-size: 11px; }
+
+  /* SHEETS MOCK */
+  .sheets-mock {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 12px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .sheets-topbar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sheets-icon { color: #0f9d58; font-size: 16px; }
+  .sheets-title { font-size: 12px; font-weight: 700; color: #212529; }
+  .sheets-body { overflow-x: auto; }
+  .sheets-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .sheets-table th { background: #f8f9fa; padding: 6px 10px; border: 1px solid #dee2e6; font-weight: 700; color: #555; text-align: left; white-space: nowrap; }
+  .sheets-table td { padding: 6px 10px; border: 1px solid #dee2e6; color: #333; white-space: nowrap; }
+  .sheets-table tr:hover td { background: #fffde7; }
+  .sheets-tab-bar { background: #f8f9fa; border-top: 1px solid var(--border); padding: 4px 8px; display: flex; gap: 4px; }
+  .sheets-tab { padding: 4px 12px; font-size: 10px; border-radius: 4px 4px 0 0; cursor: pointer; color: var(--gray); }
+  .sheets-tab.active { background: white; color: #0f9d58; font-weight: 700; border: 1px solid var(--border); border-bottom: none; }
+  .highlight-cell { background: #fff9c4 !important; font-weight: 700; }
+  .highlight-cell-blue { background: #e8f5e9 !important; font-weight: 700; color: #2e7d32 !important; }
+
+  /* BADGE */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+  .badge-red { background: #ffe0e3; color: var(--red); }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+
+  /* SECTION DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* COMPLETE STATE */
+  .complete-banner {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+    display: none;
+  }
+  .complete-banner.show { display: flex; animation: fadeIn 0.4s ease; }
+  .complete-icon { font-size: 36px; }
+  .complete-text { font-weight: 700; color: #166534; font-size: 15px; }
+  .complete-sub { font-size: 12px; color: #4ade80; font-weight: 400; }
+
+  /* OVERVIEW section */
+  .overview-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .ov-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+  .ov-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border-color: var(--red); }
+  .ov-num { font-size: 11px; font-weight: 900; color: var(--gray); letter-spacing: 1px; margin-bottom: 8px; }
+  .ov-emoji { font-size: 28px; margin-bottom: 10px; }
+  .ov-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .ov-desc { font-size: 12px; color: var(--gray); line-height: 1.6; }
+  .ov-steps { font-size: 11px; color: var(--blue); font-weight: 700; margin-top: 10px; }
+
+  /* STEPS TEXT SUMMARY */
+  .steps-text-summary {
+    background: #f9fafb;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 16px 0 4px;
+  }
+  .sts-title {
+    font-size: 12px;
+    font-weight: 900;
+    color: #374151;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .sts-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #374151;
+    padding: 6px 0;
+    border-bottom: 1px solid #e5e7eb;
+    line-height: 1.6;
+  }
+  .sts-step:last-child { border-bottom: none; }
+  .sts-num {
+    background: var(--dark);
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* SUMMARY BOX */
+  .summary-box {
+    background: #f8fffe;
+    border: 1.5px solid #86efac;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0 4px;
+  }
+  .summary-title {
+    font-size: 12px;
+    font-weight: 900;
+    color: #166534;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .summary-item {
+    font-size: 13px;
+    color: #374151;
+    padding: 5px 0;
+    border-bottom: 1px solid #dcfce7;
+    line-height: 1.6;
+  }
+  .summary-item:last-child { border-bottom: none; }
+
+  @media (max-width: 640px) {
+    .overview-cards { grid-template-columns: 1fr; }
+    .nav-tabs-wrap { overflow-x: auto; }
+    .content { padding: 24px 16px 60px; }
+    .hero { padding: 40px 16px 36px; }
+    .hero h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-logo">業務改善</div>
+    <div class="header-title">自動化ツール 操作マニュアル</div>
+    <div class="header-sub">GoodGame Poker Live SHINJUKU</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Staff Manual v1.0</div>
+  <h1>🃏 自動化ツール<br>操作マニュアル</h1>
+  <p>3つの自動化スクリプトの正しい使い方をステップごとに確認できます</p>
+</div>
+
+<!-- NAV -->
+<div class="nav-tabs-wrap">
+  <div class="nav-tab active" onclick="showTab('overview')">
+    <span>📋</span> 概要
+  </div>
+  <div class="nav-tab" onclick="showTab('zero')">
+    <div class="tab-num">①</div> 残コイン処理
+  </div>
+  <div class="nav-tab" onclick="showTab('ranking')">
+    <div class="tab-num">②</div> トナメランキング集計
+  </div>
+  <div class="nav-tab" onclick="showTab('ring')">
+    <div class="tab-num">③</div> リング預け額PW記載
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- OVERVIEW -->
+  <div id="section-overview" class="section active">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:8px;">自動化ツール 一覧</h2>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:24px;">各ツールをクリックすると詳細マニュアルへジャンプできます</p>
+
+    <div class="overview-cards">
+      <div class="ov-card" onclick="showTab('zero')">
+        <div class="ov-num">TOOL 01</div>
+        <div class="ov-emoji">🔴</div>
+        <div class="ov-title">残コイン処理 自動化</div>
+        <div class="ov-desc">残高ゼロのプレイヤーをPokerWebから自動でクリーンアップします</div>
+        <div class="ov-steps">▶ 4ステップ / フォルダ: ringchip_auto</div>
+      </div>
+      <div class="ov-card" onclick="showTab('ranking')">
+        <div class="ov-num">TOOL 02</div>
+        <div class="ov-emoji">🏆</div>
+        <div class="ov-title">トナメランキング集計 自動化</div>
+        <div class="ov-desc">毎日のDeep Stackトーナメント結果を自動でスプレッドシートに集計します</div>
+        <div class="ov-steps">▶ 4ステップ / フォルダ: tournament_daily</div>
+      </div>
+      <div class="ov-card" onclick="showTab('ring')">
+        <div class="ov-num">TOOL 03</div>
+        <div class="ov-emoji">💰</div>
+        <div class="ov-title">リング預け額PW記載 自動化</div>
+        <div class="ov-desc">スプシのリング預りデータをPokerWebへ自動で反映します</div>
+        <div class="ov-steps">▶ 6ステップ / フォルダ: ringchip_auto</div>
+      </div>
+    </div>
+
+    <div class="alert alert-warn">
+      <span class="alert-icon">⚠️</span>
+      <div><strong>実行前の確認事項：</strong>PCがインターネットに接続されていること、PokerWebのログイン情報（token.json）が有効であることを確認してください。</div>
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <div><strong>共通ルール：</strong>全ツールとも「完了」と表示されたらターミナルを閉じてOKです。最後は必ず目視で確認してください。</div>
+    </div>
+  </div>
+
+  <!-- ① 残コイン処理 -->
+  <div id="section-zero" class="section">
+    <div class="section-header">
+      <div class="section-icon icon-red">🔴</div>
+      <div>
+        <div class="section-title">① 残コイン処理 自動化</div>
+        <div class="section-desc">残高ゼロのプレイヤーをPokerWebから自動クリーンアップ <span class="badge badge-red">zero_balances</span></div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <!-- STEP 1 -->
+      <div class="step" id="z-step-1">
+        <div class="step-left">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-label">フォルダを開く</div>
+          <div class="step-detail">Downloadsフォルダから <strong>ringchip_auto_native_mac</strong> フォルダをダブルクリックして開きます。</div>
+          <div class="file-chip">📁 ringchip_auto_native_mac <span style="color:var(--gray);font-weight:400;">（9項目）</span></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step" id="z-step-2">
+        <div class="step-left">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-label">zero_balances.command をクリック</div>
+          <div class="step-detail">フォルダ内の <strong>zero_balances.command</strong>（ターミナルスクリプト）をダブルクリックします。</div>
+          <div class="file-chip highlight">⚙️ zero_balances.command <span style="color:var(--red);font-weight:400;">← ここをクリック！</span></div>
+          <div class="alert alert-info" style="margin-top:10px;">
+            <span class="alert-icon">💡</span>
+            <div>run.command ではなく <strong>zero_balances.command</strong> を選んでください</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step" id="z-step-3">
+        <div class="step-left">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-label">ターミナルが起動・自動実行される</div>
+          <div class="step-detail">ターミナルが自動で起動し、PokerWebへのログインと残高ゼロクリーンアップが実行されます。</div>
+
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="t-btn t-red"></div>
+              <div class="t-btn t-yellow"></div>
+              <div class="t-btn t-green"></div>
+              <div class="terminal-title">zero_balances.command — node</div>
+            </div>
+            <div class="terminal-body" id="zero-terminal">
+              <span class="t-line t-comment"># ターミナルを起動してデモを見る</span>
+            </div>
+          </div>
+          <button class="demo-btn" id="zero-demo-btn" onclick="runZeroDemo()">▶ 実行デモを見る</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step" id="z-step-4">
+        <div class="step-left">
+          <div class="step-num">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-label">完了確認 → 目視チェック</div>
+          <div class="step-detail">「完了：保存=0件」が表示されたらターミナルを閉じてOKです。その後PokerWebで目視確認してください。</div>
+          <div class="summary-box">
+            <div class="summary-title">✅ 完了チェック</div>
+            <div class="summary-item">① ターミナルに「完了：保存=○件」が表示された</div>
+            <div class="summary-item">② PokerWebでプレイヤーリストを「ゼロとは異なる」で確認した</div>
+            <div class="summary-item">③ ターミナルを閉じた</div>
+          </div>
+
+
+          <div class="pw-mock">
+            <div class="pw-topbar">
+              <span class="pw-logo">★ POKERWEB</span>
+              <span class="pw-url">shinjukudepoker.pokerweb.com.br/cb/jogadores</span>
+            </div>
+            <div class="pw-body">
+              <div class="pw-sidebar">
+                <div class="pw-sidebar-item">ダッシュボード</div>
+                <div class="pw-sidebar-item active">プレイヤー ▼</div>
+                <div class="pw-sidebar-item" style="padding-left:28px;font-size:10px;">プレイヤーリスト</div>
+              </div>
+              <div class="pw-main">
+                <div class="pw-main-title">Jogadores - Listar</div>
+                <div class="pw-filter-row">
+                  <select class="pw-select"><option>▷▷ すべて</option></select>
+                  <select class="pw-select highlight"><option>ゼロとは異なる</option></select>
+                  <select class="pw-select"><option>残高: すべて</option></select>
+                </div>
+                <div class="pw-table-wrap">
+                  <div class="pw-table-header">
+                    <div class="pw-th">コード</div>
+                    <div class="pw-th">名前</div>
+                    <div class="pw-th">残高</div>
+                    <div class="pw-th">グループ</div>
+                  </div>
+                  <div class="pw-empty" id="pw-empty-msg">✅ 検索結果はありません（正常完了）</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="steps-text-summary" style="margin:0 0 8px;">
+      <div class="sts-title">📋 手順まとめ</div>
+      <div class="sts-step"><span class="sts-num">1</span>「ringchip_auto_native_mac」フォルダを開く</div>
+      <div class="sts-step"><span class="sts-num">2</span>「zero_balances.command」をダブルクリック</div>
+      <div class="sts-step"><span class="sts-num">3</span>ターミナルが起動 → PokerWebへ自動ログイン・処理が始まる</div>
+      <div class="sts-step"><span class="sts-num">4</span>「完了：保存=○件」が表示されたらターミナルを閉じる</div>
+      <div class="sts-step"><span class="sts-num">5</span>PokerWebでプレイヤーリストを目視確認する</div>
+    </div>
+  </div>
+
+  <!-- ② トナメランキング集計 -->
+  <div id="section-ranking" class="section">
+    <div class="section-header">
+      <div class="section-icon icon-blue">🏆</div>
+      <div>
+        <div class="section-title">② トナメポイントランキング集計 自動化</div>
+        <div class="section-desc">Daily Deep Stackの結果をスプシへ自動集計 <span class="badge badge-blue">run.command</span></div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">フォルダを開く</div>
+          <div class="step-detail"><strong>tournament_daily_deep_stack_native_mac</strong> フォルダをダブルクリックして開きます。</div>
+          <div class="file-chip">📁 tournament_daily_deep_stack_native_mac <span style="color:var(--gray);font-weight:400;">（9項目）</span></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">run.command をクリック</div>
+          <div class="step-detail">フォルダ内の <strong>run.command</strong> をダブルクリックします。</div>
+          <div class="file-chip highlight">⚙️ run.command <span style="color:var(--red);font-weight:400;">← ここをクリック！</span></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">ターミナルとPokerWebが自動起動</div>
+          <div class="step-detail">ターミナルが起動し、PokerWebの「終了済みトーナメント」から成績データを自動取得します。完了までしばらく待ちます。</div>
+
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="t-btn t-red"></div>
+              <div class="t-btn t-yellow"></div>
+              <div class="t-btn t-green"></div>
+              <div class="terminal-title">run.command — node</div>
+            </div>
+            <div class="terminal-body" id="ranking-terminal">
+              <span class="t-line t-comment"># ターミナルを起動してデモを見る</span>
+            </div>
+          </div>
+          <button class="demo-btn" id="ranking-demo-btn" onclick="runRankingDemo()">▶ 実行デモを見る</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">完了確認 → スプシで目視確認</div>
+          <div class="step-detail">「完了」が表示されたらターミナルを閉じ、スプレッドシートで集計結果を確認します。</div>
+          <div class="summary-box">
+            <div class="summary-title">✅ 完了チェック</div>
+            <div class="summary-item">① ターミナルに「完了」が表示された</div>
+            <div class="summary-item">② スプシの当月シートにデータが反映されていた</div>
+            <div class="summary-item">③ ターミナルを閉じた</div>
+          </div>
+
+
+          <div class="sheets-mock">
+            <div class="sheets-topbar">
+              <span class="sheets-icon">📊</span>
+              <span class="sheets-title">トナメポイントランキング MONTHLY DEEP RANKING集計</span>
+            </div>
+            <div class="sheets-body" style="overflow-x:auto;">
+              <table class="sheets-table" style="min-width:600px;">
+                <thead>
+                  <tr>
+                    <th style="background:#f8f9fa;">順位</th>
+                    <th style="background:#f8f9fa;">PC</th>
+                    <th style="background:#f8f9fa;">名前</th>
+                    <th style="background:#ff4444;color:white;">E数</th>
+                    <th style="background:#ffa500;color:white;">EB</th>
+                    <th style="background:#f8f9fa;">倍率</th>
+                    <th style="background:#f8f9fa;">獲得skill</th>
+                    <th style="background:#dbeafe;">日付(Ctrl+;)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1位</td><td>9293</td><td style="font-weight:700;">bob@1496</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">□</td><td style="text-align:center;">1</td><td style="font-weight:700;color:#2e7d32;">156</td><td>2026/06/02</td></tr>
+                  <tr><td>2位</td><td>2231</td><td>夜ポー神</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">☑</td><td style="text-align:center;">1</td><td>124</td><td>2026/06/02</td></tr>
+                  <tr><td>3位</td><td>4373</td><td>YAMA T</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">☑</td><td style="text-align:center;">1</td><td>111</td><td>2026/06/02</td></tr>
+                  <tr><td>4位</td><td>2739</td><td>namba</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">☑</td><td style="text-align:center;">1</td><td>104</td><td>2026/06/02</td></tr>
+                  <tr><td>5位</td><td>11542</td><td>YucK96</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">□</td><td style="text-align:center;">1</td><td>91</td><td>2026/06/02</td></tr>
+                  <tr><td>6位</td><td>4180</td><td>hidezo</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">□</td><td style="text-align:center;">1</td><td>84</td><td>2026/06/02</td></tr>
+                  <tr><td>7位</td><td>8264</td><td>snoopy18</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">□</td><td style="text-align:center;">1</td><td>70</td><td>2026/06/02</td></tr>
+                  <tr><td>8位</td><td>8249</td><td>Raia</td><td style="background:#ffe0e0;font-weight:700;text-align:center;">24</td><td style="text-align:center;">☑</td><td style="text-align:center;">1</td><td>7</td><td>2026/06/02</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sheets-tab-bar">
+              <div class="sheets-tab">運用</div>
+              <div class="sheets-tab">告知</div>
+              <div class="sheets-tab">原本</div>
+              <div class="sheets-tab active" style="color:#0f9d58;font-weight:700;">2026/06</div>
+              <div class="sheets-tab">2026/05</div>
+              <div class="sheets-tab">2026/04</div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="steps-text-summary" style="margin:0 0 8px;">
+      <div class="sts-title">📋 手順まとめ</div>
+      <div class="sts-step"><span class="sts-num">1</span>「tournament_daily_deep_stack_native_mac」フォルダを開く</div>
+      <div class="sts-step"><span class="sts-num">2</span>「run.command」をダブルクリック</div>
+      <div class="sts-step"><span class="sts-num">3</span>ターミナルとPokerWebが自動起動 → トーナメント結果を自動取得</div>
+      <div class="sts-step"><span class="sts-num">4</span>「完了」が表示されたらターミナルを閉じる</div>
+      <div class="sts-step"><span class="sts-num">5</span>スプシの当月シートで集計結果を目視確認する</div>
+    </div>
+  </div>
+
+  <!-- ③ リング預け額PW記載 -->
+  <div id="section-ring" class="section">
+    <div class="section-header">
+      <div class="section-icon icon-green">💰</div>
+      <div>
+        <div class="section-title">③ リング預け額 PW記載 自動化</div>
+        <div class="section-desc">スプシのリング預りデータをPokerWebへ自動反映 <span class="badge badge-green">run.command</span></div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">フォルダを開く</div>
+          <div class="step-detail"><strong>ringchip_auto_native_mac</strong> フォルダをダブルクリックして開きます（①と同じフォルダです）。</div>
+          <div class="file-chip">📁 ringchip_auto_native_mac <span style="color:var(--gray);font-weight:400;">（9項目）</span></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">run.command をクリック</div>
+          <div class="step-detail">フォルダ内の <strong>run.command</strong> をダブルクリックします（zero_balances.commandではありません）。</div>
+          <div class="file-chip highlight">⚙️ run.command <span style="color:var(--red);font-weight:400;">← ここをクリック！</span></div>
+          <div class="alert alert-warn">
+            <span class="alert-icon">⚠️</span>
+            <div>①の <strong>zero_balances.command</strong> と間違えないように注意！</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">「リング番号を入力してください」が表示される</div>
+          <div class="step-detail">ターミナルが起動し、リング番号の入力待ち状態になります。<strong>まだ入力しない</strong>で次のステップへ。</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="t-btn t-red"></div>
+              <div class="t-btn t-yellow"></div>
+              <div class="t-btn t-green"></div>
+              <div class="terminal-title">run.command — Python</div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line t-prompt">kabukityoeden@matan-Air ~ %</span>
+              <span class="t-line" style="color:#c9d1d9;">リング番号を入力してください: <span class="t-typing"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">PokerWebでリング番号を確認する</div>
+          <div class="step-detail">PokerWebを開き、リングゲームのページURLの末尾の数字がリング番号です。</div>
+
+          <div class="pw-mock">
+            <div class="pw-topbar" style="position:relative;flex-wrap:nowrap;overflow:hidden;">
+              <span class="pw-logo" style="flex-shrink:0;">★ POKERWEB</span>
+              <span class="pw-url" id="pw-url-display" style="position:relative;display:flex;align-items:center;gap:0;min-width:0;overflow:hidden;">
+                <span style="color:rgba(255,255,255,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:10px;">…/cb/cash/painel/</span><span id="ring-num-highlight" style="position:relative;display:inline-block;flex-shrink:0;margin-top:18px;">
+                  <span style="background:#ff4444;color:white;font-weight:900;font-size:15px;padding:3px 12px;border-radius:6px;letter-spacing:1px;box-shadow:0 0 0 3px rgba(255,68,68,0.4);animation:ringPulse 1.2s ease-in-out infinite;display:inline-block;white-space:nowrap;">914</span>
+                  <span style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:#ff4444;color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;">リング番号！</span>
+                </span>
+              </span>
+            </div>
+            <div class="pw-body">
+              <div class="pw-sidebar">
+                <div class="pw-sidebar-item active">リングゲーム ▼</div>
+                <div class="pw-sidebar-item" style="padding-left:28px;font-size:10px;">新しいリングゲーム</div>
+                <div class="pw-sidebar-item" style="padding-left:28px;font-size:10px;">オープン</div>
+              </div>
+              <div class="pw-main">
+                <div class="pw-main-title">リングゲーム - 2026/06/03 リングゲーム</div>
+                <div class="pw-table-wrap">
+                  <div class="pw-table-header">
+                    <div class="pw-th">時刻</div>
+                    <div class="pw-th">名前</div>
+                    <div class="pw-th">残高 R</div>
+                    <div class="pw-th">s</div>
+                  </div>
+                  <div class="pw-row"><div class="pw-td">04:17</div><div class="pw-td">a9010</div><div class="pw-td">1,659</div><div class="pw-td">1,659</div></div>
+                  <div class="pw-row"><div class="pw-td">04:18</div><div class="pw-td">chiemaru</div><div class="pw-td">1,644</div><div class="pw-td">1,644</div></div>
+                  <div class="pw-row"><div class="pw-td">04:18</div><div class="pw-td">hiromi163</div><div class="pw-td">11,082</div><div class="pw-td">11,082</div></div>
+                </div>
+                <div style="margin-top:8px;padding:8px;background:#fff0f1;border:1px solid #ffb3b8;border-radius:6px;font-size:11px;display:flex;align-items:center;gap:6px;">
+                  <span style="color:var(--red);font-size:14px;">👆</span> URLの末尾 <strong style="color:var(--red);font-size:13px;">/914</strong> がリング番号 ← これをメモ！
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">5</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">スプシのR列にリング番号を入力する</div>
+          <div class="step-detail">「GGPL新宿/競技結果申請フォーム」を開き、<strong>「リング預り」シート</strong>のR列（リング番号列）に、付与対象の全アカウントのリング番号を入力します。</div>
+
+          <div class="sheets-mock">
+            <div class="sheets-topbar">
+              <span class="sheets-icon">📊</span>
+              <span class="sheets-title">GGPL新宿/競技結果申請フォーム（回答）</span>
+            </div>
+            <div class="sheets-body">
+              <table class="sheets-table">
+                <thead>
+                  <tr><th>タイムスタンプ</th><th>GameID</th><th>リングチップ</th><th>担当</th><th style="background:#dbeafe;">リング→PW<br>預かりした？</th><th>申請日/備考</th><th style="background:#ff4444;color:white;position:relative;"><span style="position:relative;">R列: リング番号<span style="position:absolute;top:-6px;left:-6px;right:-6px;bottom:-6px;border:2px solid #ff4444;border-radius:4px;animation:ringPulse 1.2s ease-in-out infinite;pointer-events:none;"></span></span></th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>2026/06/03 23:08</td><td>MISO0814</td><td>922</td><td>りこ</td><td>□</td><td></td><td style="position:relative;font-weight:700;background:#fff0f0;"><span style="position:absolute;top:1px;left:1px;right:1px;bottom:1px;border:2px solid #ff4444;border-radius:3px;animation:ringPulse 1.2s ease-in-out infinite;pointer-events:none;"></span>914</td></tr>
+                  <tr><td>2026/06/03 23:09</td><td>OT4649</td><td>675</td><td>でく</td><td>□</td><td></td><td style="position:relative;font-weight:700;background:#fff0f0;"><span style="position:absolute;top:1px;left:1px;right:1px;bottom:1px;border:2px solid #ff4444;border-radius:3px;animation:ringPulse 1.2s ease-in-out infinite;pointer-events:none;"></span>914</td></tr>
+                  <tr><td>2026/06/03 23:09</td><td>Asukahimajin</td><td>3588</td><td>りこ</td><td>□</td><td></td><td style="position:relative;font-weight:700;background:#fff0f0;"><span style="position:absolute;top:1px;left:1px;right:1px;bottom:1px;border:2px solid #ff4444;border-radius:3px;animation:ringPulse 1.2s ease-in-out infinite;pointer-events:none;"></span>914</td></tr>
+                  <tr><td></td><td></td><td></td><td></td><td>□</td><td></td><td style="color:#aaa;font-size:10px;">← ここに入力</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sheets-tab-bar">
+              <div class="sheets-tab">フォームの回答1</div>
+              <div class="sheets-tab active">リング預り</div>
+              <div class="sheets-tab">トナメ契約</div>
+            </div>
+          </div>
+          <div class="alert alert-warn">
+            <span class="alert-icon">⚠️</span>
+            <div>付与対象の全行のR列にリング番号を入力してください。入力漏れがあると処理されません。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step">
+        <div class="step-left"><div class="step-num">6</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-label">ターミナルにリング番号を入力 → 完了確認</div>
+          <div class="step-detail">スプシへの入力が完了したら、ターミナルに戻って同じリング番号を入力し、Enterキーを押します。</div>
+          <div class="summary-box" style="margin-bottom:12px;">
+            <div class="summary-title">✅ 完了チェック</div>
+            <div class="summary-item">① スプシのR列に全アカウントのリング番号を入力した</div>
+            <div class="summary-item">② ターミナルにリング番号を入力してEnterを押した</div>
+            <div class="summary-item">③ ターミナルに「完了: 成功=○件 / エラー=○件」が表示された</div>
+            <div class="summary-item">④ PokerWebで目視確認した</div>
+            <div class="summary-item">⑤ ターミナルを閉じた</div>
+          </div>
+
+
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="t-btn t-red"></div>
+              <div class="t-btn t-yellow"></div>
+              <div class="t-btn t-green"></div>
+              <div class="terminal-title">run.command — Python</div>
+            </div>
+            <div class="terminal-body" id="ring-terminal">
+              <span class="t-line" style="color:#c9d1d9;">リング番号を入力してください: <span class="t-input">_</span></span>
+            </div>
+          </div>
+
+          <div style="margin: 12px 0;">
+            <div style="font-size:12px;color:var(--gray);margin-bottom:8px;">デモ：リング番号を入力してEnterを押す</div>
+            <div class="input-demo">
+              <input type="number" id="ring-num-input" placeholder="例: 914" value="914">
+              <button onclick="runRingDemo()">⏎ Enter</button>
+            </div>
+          </div>
+
+          <div id="ring-result" style="display:none;">
+            <div class="progress-wrap">
+              <div class="progress-label"><span>処理中...</span><span id="ring-pct">0%</span></div>
+              <div class="progress-bar"><div class="progress-fill" id="ring-progress"></div></div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="steps-text-summary" style="margin:0 0 8px;">
+      <div class="sts-title">📋 手順まとめ</div>
+      <div class="sts-step"><span class="sts-num">1</span>「ringchip_auto_native_mac」フォルダを開く</div>
+      <div class="sts-step"><span class="sts-num">2</span>「run.command」をダブルクリック（zero_balances.commandではない）</div>
+      <div class="sts-step"><span class="sts-num">3</span>ターミナルに「リング番号を入力してください」と表示される → まだ入力しない</div>
+      <div class="sts-step"><span class="sts-num">4</span>PokerWebを開き、リングゲームのURLの末尾の数字（例: 914）を確認する</div>
+      <div class="sts-step"><span class="sts-num">5</span>スプシ「GGPL新宿/競技結果申請フォーム」→「リング預り」シートのR列に、付与対象の全アカウントのリング番号を入力する</div>
+      <div class="sts-step"><span class="sts-num">6</span>ターミナルに戻り、同じリング番号を入力してEnterキーを押す</div>
+      <div class="sts-step"><span class="sts-num">7</span>「完了: 成功=○件 / エラー=○件」が表示されたらターミナルを閉じる</div>
+      <div class="sts-step"><span class="sts-num">8</span>PokerWebで目視確認する</div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const map = { overview: 0, zero: 1, ranking: 2, ring: 3 };
+  tabs[map[id]].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.ck-box');
+  box.textContent = el.classList.contains('checked') ? '✓' : '';
+}
+
+// ①残コインデモ
+function runZeroDemo() {
+  const btn = document.getElementById('zero-demo-btn');
+  btn.classList.add('running');
+  btn.textContent = '⏳ 実行中...';
+  const terminal = document.getElementById('zero-terminal');
+  terminal.innerHTML = '';
+  const lines = [
+    { text: 'Running zero balance cleanup.', cls: '' },
+    { text: 'PokerWebにログイン中...', cls: 't-comment' },
+    { text: '　ログイン完了', cls: 't-success' },
+    { text: '表示件数を 100 件に変更します。', cls: '' },
+    { text: 'Downloadsから残高ありの人を探します。', cls: '' },
+    { text: '================================ logs ================================', cls: 't-comment' },
+    { text: 'Saldo列を残高が多い順に並び替えます。', cls: '' },
+    { text: 'Saldo列を残高が多い順に並び替えます。', cls: '' },
+    { text: 'Saldoが0ではない行だけに絞り込みます。', cls: '' },
+    { text: '残高が0ではない候補は見つかりませんでした。', cls: 't-warn' },
+    { text: '完了：保存=0件', cls: 't-success' },
+    { text: 'Press Enter to close', cls: 't-comment' },
+  ];
+  let i = 0;
+  function addLine() {
+    if (i < lines.length) {
+      const span = document.createElement('span');
+      span.className = 't-line ' + (lines[i].cls || '');
+      span.textContent = lines[i].text;
+      terminal.appendChild(span);
+      terminal.appendChild(document.createElement('br'));
+      i++;
+      setTimeout(addLine, i < 4 ? 600 : 200);
+    } else {
+      btn.textContent = '✅ 完了！';
+      btn.style.background = '#198754';
+    }
+  }
+  addLine();
+}
+
+// ②ランキングデモ
+function runRankingDemo() {
+  const btn = document.getElementById('ranking-demo-btn');
+  btn.classList.add('running');
+  btn.textContent = '⏳ 実行中...';
+  const terminal = document.getElementById('ranking-terminal');
+  terminal.innerHTML = '';
+  const lines = [
+    { text: 'PokerWebにログイン中...', cls: 't-comment' },
+    { text: '　ログイン完了', cls: 't-success' },
+    { text: 'クローズドトーナメントを開いています...', cls: '' },
+    { text: '対象トーナメント: Daily Deep Stack 3K', cls: '' },
+    { text: 'PDFからランキングデータを取得中...', cls: 't-comment' },
+    { text: 'スプレッドシートに書き込み中...', cls: '' },
+    { text: '書き込み完了：17件', cls: 't-success' },
+    { text: '完了', cls: 't-success' },
+    { text: 'Press Enter to close', cls: 't-comment' },
+  ];
+  let i = 0;
+  function addLine() {
+    if (i < lines.length) {
+      const span = document.createElement('span');
+      span.className = 't-line ' + (lines[i].cls || '');
+      span.textContent = lines[i].text;
+      terminal.appendChild(span);
+      terminal.appendChild(document.createElement('br'));
+      i++;
+      setTimeout(addLine, i < 3 ? 700 : 300);
+    } else {
+      btn.textContent = '✅ 完了！';
+      btn.style.background = '#198754';
+    }
+  }
+  addLine();
+}
+
+// ③リングデモ
+function runRingDemo() {
+  const num = document.getElementById('ring-num-input').value || '914';
+  const terminal = document.getElementById('ring-terminal');
+  const result = document.getElementById('ring-result');
+  terminal.innerHTML = '';
+  result.style.display = 'block';
+  const bar = document.getElementById('ring-progress');
+  const pct = document.getElementById('ring-pct');
+  bar.style.width = '0%';
+  pct.textContent = '0%';
+
+  const lines = [
+    { text: `リング番号を入力してください: ${num}`, cls: 't-input', delay: 0 },
+    { text: `対象リング番号: ${num}`, cls: '', delay: 400 },
+    { text: '', cls: '', delay: 600 },
+    { text: 'スプレッドシートに接続中...', cls: 't-comment', delay: 900 },
+    { text: '処理待ち: 3件', cls: '', delay: 1400 },
+    { text: '', cls: '', delay: 1600 },
+    { text: 'PokerWebにログイン中...', cls: 't-comment', delay: 1900 },
+    { text: '　2FAコード: 143636', cls: 't-warn', delay: 2600 },
+    { text: '　ログイン完了: https://shinjukudepoker.pokerweb.com.br/cb', cls: 't-success', delay: 3200 },
+    { text: '処理中: 行1175 / gameid=58797934 / 預かりチップ数=922', cls: '', delay: 3800 },
+    { text: '　× プレイヤーが見つかりません', cls: 't-warn', delay: 4300 },
+    { text: '処理中: 行1176 / gameid=35223743 / 預かりチップ数=675', cls: '', delay: 4800 },
+    { text: '　→ id_jogador=10123 / id_registro=0（リング外）', cls: 't-comment', delay: 5200 },
+    { text: '　✓ 預け入れ完了: 675チップ（リング外）', cls: 't-success', delay: 5600 },
+    { text: '処理中: 行1177 / gameid=12657840 / 預かりチップ数=3588', cls: '', delay: 6100 },
+    { text: '　→ id_jogador=4102 / id_registro=0（リング外）', cls: 't-comment', delay: 6500 },
+    { text: '　✓ 預け入れ完了: 3588チップ（リング外）', cls: 't-success', delay: 6900 },
+    { text: '', cls: '', delay: 7300 },
+    { text: '完了: 成功=2件 / エラー=1件', cls: 't-success', delay: 7600 },
+    { text: '', cls: '', delay: 7800 },
+    { text: 'Press Enter to close', cls: 't-comment', delay: 8000 },
+  ];
+
+  // プログレスバー更新
+  const totalTime = 8000;
+  const barInterval = setInterval(() => {
+    const elapsed = parseFloat(bar.style.width) + 1.2;
+    if (elapsed >= 100) { bar.style.width = '100%'; pct.textContent = '100%'; clearInterval(barInterval); }
+    else { bar.style.width = elapsed + '%'; pct.textContent = Math.floor(elapsed) + '%'; }
+  }, totalTime / 100);
+
+  lines.forEach(l => {
+    setTimeout(() => {
+      const span = document.createElement('span');
+      span.className = 't-line ' + (l.cls || '');
+      span.textContent = l.text;
+      terminal.appendChild(span);
+      terminal.appendChild(document.createElement('br'));
+      terminal.scrollTop = terminal.scrollHeight;
+    }, l.delay);
+  });
+
+  // スプシモックのチェックボックス更新
+  setTimeout(() => {
+    document.querySelectorAll('.sheets-check').forEach((el, i) => {
+      if (i === 1 || i === 2) { el.textContent = '☑'; el.style.color = '#198754'; }
+    });
+  }, 7000);
+}
+</script>
+</body>
+</html>
