@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHubにコードをアップする方法｜初心者向けマニュアル</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      background: #f0f4f8;
+      color: #2d3748;
+      line-height: 1.8;
+    }
+
+    /* ヘッダー */
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    header .badge {
+      display: inline-block;
+      background: #e94560;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    header h1 {
+      font-size: 2.2em;
+      font-weight: 900;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    header p {
+      font-size: 1.05em;
+      opacity: 0.85;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* 目次 */
+    .toc {
+      background: white;
+      max-width: 780px;
+      margin: 40px auto 0;
+      border-radius: 16px;
+      padding: 30px 36px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .toc h2 {
+      font-size: 1.1em;
+      color: #718096;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .toc ol {
+      padding-left: 20px;
+    }
+    .toc li {
+      margin-bottom: 8px;
+    }
+    .toc a {
+      color: #3182ce;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .toc a:hover { text-decoration: underline; }
+
+    /* セクション */
+    .section {
+      max-width: 780px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* ステップカード */
+    .step-card {
+      background: white;
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      position: relative;
+    }
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #1a1a2e;
+      color: white;
+      border-radius: 50%;
+      font-size: 1em;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+    .step-card h2 {
+      font-size: 1.4em;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+    .step-card .subtitle {
+      color: #718096;
+      font-size: 0.92em;
+      margin-bottom: 20px;
+    }
+    .step-card p {
+      margin-bottom: 14px;
+      font-size: 0.97em;
+    }
+
+    /* ターミナル */
+    .terminal {
+      background: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+    .terminal-bar {
+      background: #3a3a3a;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .terminal-bar .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+    .terminal-bar .title {
+      margin-left: 8px;
+      color: #999;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+    .terminal-body .prompt {
+      color: #50fa7b;
+    }
+    .terminal-body .cmd {
+      color: #f8f8f2;
+    }
+    .terminal-body .output {
+      color: #94a3b8;
+      display: block;
+      margin-top: 2px;
+    }
+    .terminal-body .comment {
+      color: #6272a4;
+    }
+    .terminal-body .success {
+      color: #50fa7b;
+    }
+    .terminal-body .url {
+      color: #8be9fd;
+    }
+
+    /* GitHub画面モック */
+    .github-mock {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .github-topbar {
+      background: #24292f;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .github-topbar .logo {
+      color: white;
+      font-size: 20px;
+    }
+    .github-topbar .nav-item {
+      color: #cdd9e5;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .github-topbar .nav-item.active {
+      background: rgba(255,255,255,0.1);
+    }
+    .github-content {
+      background: #ffffff;
+      padding: 24px;
+    }
+    .gh-repo-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .gh-repo-icon { color: #57606a; font-size: 18px; }
+    .gh-repo-name {
+      color: #0969da;
+      font-size: 1.1em;
+      font-weight: 700;
+    }
+    .gh-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #d0d7de;
+      margin-bottom: 20px;
+    }
+    .gh-tab {
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #57606a;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .gh-tab.active {
+      color: #24292f;
+      border-bottom: 2px solid #fd8c73;
+      font-weight: 600;
+    }
+    .gh-file-list {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .gh-file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #d0d7de;
+      font-size: 13px;
+    }
+    .gh-file-item:last-child { border-bottom: none; }
+    .gh-file-item .icon { color: #57606a; }
+    .gh-file-item .name { color: #0969da; font-weight: 500; flex: 1; }
+    .gh-file-item .msg { color: #57606a; }
+    .gh-file-item .time { color: #57606a; font-size: 12px; }
+    .gh-green-btn {
+      display: inline-block;
+      background: #2da44e;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Pages設定モック */
+    .settings-mock {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .settings-header {
+      background: #f6f8fa;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #24292f;
+    }
+    .settings-body {
+      padding: 20px;
+      background: white;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .settings-label {
+      font-size: 13px;
+      font-weight: 600;
+      width: 80px;
+      color: #24292f;
+    }
+    .settings-select {
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 13px;
+      background: white;
+      color: #24292f;
+    }
+    .settings-save {
+      background: #2da44e;
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pages-url-box {
+      background: #dafbe1;
+      border: 1px solid #aceebb;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: #1a7f37;
+    }
+    .pages-url-box strong { display: block; margin-bottom: 4px; }
+    .pages-url-box a { color: #0969da; font-weight: 600; }
+
+    /* ポイント・注意 */
+    .tip-box {
+      background: #ebf8ff;
+      border-left: 4px solid #3182ce;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 0.93em;
+    }
+    .tip-box .label {
+      font-weight: 800;
+      color: #2b6cb0;
+      margin-bottom: 4px;
+    }
+    .warn-box {
+      background: #fffbeb;
+      border-left: 4px solid #f6ad55;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 0.93em;
+    }
+    .warn-box .label {
+      font-weight: 800;
+      color: #c05621;
+      margin-bottom: 4px;
+    }
+
+    /* 用語解説 */
+    .glossary {
+      background: white;
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      margin-bottom: 32px;
+    }
+    .glossary h2 {
+      font-size: 1.3em;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+    .glossary-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f4f8;
+    }
+    .glossary-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .glossary-term {
+      background: #1a1a2e;
+      color: #50fa7b;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      height: fit-content;
+      margin-top: 2px;
+    }
+    .glossary-desc { font-size: 0.94em; }
+    .glossary-desc strong { color: #2d3748; }
+
+    /* まとめ */
+    .summary {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .summary h2 { font-size: 1.4em; margin-bottom: 20px; }
+    .summary-steps {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .summary-step {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.9em;
+    }
+    .summary-step .num {
+      color: #50fa7b;
+      font-weight: 900;
+      margin-right: 6px;
+    }
+    .summary p { opacity: 0.8; font-size: 0.92em; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #a0aec0;
+      font-size: 0.85em;
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6em; }
+      .step-card { padding: 24px 20px; }
+      .terminal-body { font-size: 12px; padding: 16px; }
+      .glossary-item { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header>
+  <div class="badge">🔰 初心者向けマニュアル</div>
+  <h1>GitHubにコードを<br>アップする方法</h1>
+  <p>ターミナルを使って、自分のファイルをGitHubに公開するまでの全手順をやさしく解説！</p>
+</header>
+
+<!-- 目次 -->
+<div class="toc section">
+  <h2>📋 このマニュアルの流れ</h2>
+  <ol>
+    <li><a href="#step0">そもそもGitHubって何？（超基本）</a></li>
+    <li><a href="#step1">STEP 1｜事前準備を確認する</a></li>
+    <li><a href="#step2">STEP 2｜GitHubにリポジトリを作る</a></li>
+    <li><a href="#step3">STEP 3｜ファイルをアップロードする</a></li>
+    <li><a href="#step4">STEP 4｜GitHub Pagesで公開する</a></li>
+    <li><a href="#glossary">用語集（わからない言葉はここで確認）</a></li>
+  </ol>
+</div>
+
+<!-- STEP 0: 基本説明 -->
+<div class="section">
+  <div class="step-card" id="step0">
+    <div class="step-number">💡</div>
+    <h2>そもそもGitHubって何？</h2>
+    <p class="subtitle">まずここを読んでからステップに進もう</p>
+
+    <p>GitHubは、自分のコード（HTMLやプログラムなど）を<strong>インターネット上に保存・公開できるサービス</strong>です。</p>
+    <p>「Googleドライブ」のコード専用版、みたいなイメージ！</p>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; margin: 20px 0;">
+      <div style="flex:1; min-width:180px; background:#f0f4f8; border-radius:12px; padding:18px; text-align:center;">
+        <div style="font-size:2em; margin-bottom:8px;">💾</div>
+        <strong>バックアップ</strong>
+        <p style="font-size:0.85em; color:#718096; margin-top:6px;">コードをクラウドに安全に保存</p>
+      </div>
+      <div style="flex:1; min-width:180px; background:#f0f4f8; border-radius:12px; padding:18px; text-align:center;">
+        <div style="font-size:2em; margin-bottom:8px;">🌐</div>
+        <strong>公開（Pages）</strong>
+        <p style="font-size:0.85em; color:#718096; margin-top:6px;">HTMLファイルをサイトとして公開</p>
+      </div>
+      <div style="flex:1; min-width:180px; background:#f0f4f8; border-radius:12px; padding:18px; text-align:center;">
+        <div style="font-size:2em; margin-bottom:8px;">👥</div>
+        <strong>共有・共同作業</strong>
+        <p style="font-size:0.85em; color:#718096; margin-top:6px;">チームで同じコードを管理</p>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="label">📌 このマニュアルでやること</div>
+      ターミナル（黒い画面）にコマンドを入力して、自分のファイルをGitHubにアップ → URLで公開できる状態にします！
+    </div>
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="section">
+  <div class="step-card" id="step1">
+    <div class="step-number">1</div>
+    <h2>STEP 1｜事前準備を確認する</h2>
+    <p class="subtitle">まずターミナルを開いて、必要なツールが入っているか確認しよう</p>
+
+    <p>ターミナルを開いたら、以下のコマンドを入力してEnterを押してみよう。</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <div class="title">ターミナル</div>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># gitが入っているか確認</span><br>
+        <span class="prompt">$ </span><span class="cmd">git --version</span><br>
+        <span class="output success">git version 2.39.3</span><br><br>
+
+        <span class="comment"># GitHub CLIが入っているか確認</span><br>
+        <span class="prompt">$ </span><span class="cmd">gh --version</span><br>
+        <span class="output success">gh version 2.40.0</span><br><br>
+
+        <span class="comment"># GitHubにログインしているか確認</span><br>
+        <span class="prompt">$ </span><span class="cmd">gh auth status</span><br>
+        <span class="output success">✓ Logged in to github.com account あなたのID</span>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="label">✅ 上のように表示されればOK！</div>
+      バージョン番号が出ればインストール済みです。数字は多少違ってもOK。
+    </div>
+
+    <div class="warn-box">
+      <div class="label">⚠️ 「command not found」と出たら？</div>
+      gitやghがインストールされていません。<br>
+      <strong>git：</strong><a href="https://git-scm.com" style="color:#c05621;">https://git-scm.com</a> からインストール<br>
+      <strong>gh：</strong><a href="https://cli.github.com" style="color:#c05621;">https://cli.github.com</a> からインストール
+    </div>
+
+    <p>ログインしていない場合は以下のコマンドでログインできます：</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <div class="title">ターミナル</div>
+      </div>
+      <div class="terminal-body">
+        <span class="prompt">$ </span><span class="cmd">gh auth login</span><br>
+        <span class="output">? What account do you want to log into? <span class="success">GitHub.com</span></span><br>
+        <span class="output">? How would you like to authenticate? <span class="success">Login with a web browser</span></span><br>
+        <span class="output success">✓ Authentication complete!</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="section">
+  <div class="step-card" id="step2">
+    <div class="step-number">2</div>
+    <h2>STEP 2｜GitHubにリポジトリを作る</h2>
+    <p class="subtitle">「リポジトリ」＝ファイルを入れる箱のこと。まず箱を作ります！</p>
+
+    <p>以下のコマンドを入力するだけで、GitHubにリポジトリ（箱）が自動で作られます。</p>
+    <p>「<code style="background:#f0f4f8; padding:2px 6px; border-radius:4px;">my-project</code>」の部分は好きな名前に変えてOK！</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <div class="title">ターミナル</div>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># --public = 誰でも見られる公開設定</span><br>
+        <span class="prompt">$ </span><span class="cmd">gh repo create my-project --public</span><br><br>
+        <span class="output success">✓ Created repository あなたのID/my-project on GitHub</span><br>
+        <span class="output url">https://github.com/あなたのID/my-project</span>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="label">📌 --public と --private の違い</div>
+      <strong>--public：</strong>誰でも見られる（GitHub Pagesで公開するならこちら）<br>
+      <strong>--private：</strong>自分だけが見られる（非公開にしたいとき）
+    </div>
+
+    <p>コマンド実行後、GitHubのブラウザで確認するとこんな画面になります👇</p>
+
+    <!-- GitHub画面モック -->
+    <div class="github-mock">
+      <div class="github-topbar">
+        <div class="logo">⬛</div>
+        <div class="nav-item">Pull requests</div>
+        <div class="nav-item">Issues</div>
+        <div class="nav-item active">Repositories</div>
+      </div>
+      <div class="github-content">
+        <div class="gh-repo-header">
+          <span class="gh-repo-icon">📁</span>
+          <span class="gh-repo-name">あなたのID / my-project</span>
+          <span style="background:#ddf4ff; color:#0550ae; font-size:11px; padding:2px 8px; border-radius:20px; font-weight:600;">Public</span>
+        </div>
+        <div class="gh-tabs">
+          <div class="gh-tab active">📄 Code</div>
+          <div class="gh-tab">🔧 Issues</div>
+          <div class="gh-tab">⚙️ Settings</div>
+        </div>
+        <div style="text-align:center; padding:30px 20px; color:#57606a;">
+          <div style="font-size:3em; margin-bottom:12px;">📭</div>
+          <p style="font-weight:600; margin-bottom:8px;">リポジトリはまだ空です</p>
+          <p style="font-size:13px;">次のステップでファイルをアップロードします！</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="section">
+  <div class="step-card" id="step3">
+    <div class="step-number">3</div>
+    <h2>STEP 3｜ファイルをアップロードする</h2>
+    <p class="subtitle">ファイルをGitHubに送る作業です。順番通りにコマンドを入力しよう！</p>
+
+    <p>全部で<strong>5つのコマンド</strong>を順番に実行します。一つずつ確認しながら進もう！</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <div class="title">ターミナル</div>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># ① アップしたいフォルダに移動する</span><br>
+        <span class="prompt">$ </span><span class="cmd">cd ~/Desktop/my-project</span><br>
+        <span class="comment"># 　↑ デスクトップの「my-project」フォルダに移動</span><br><br>
+
+        <span class="comment"># ② gitの管理をスタートする（フォルダ内で1回だけ実行）</span><br>
+        <span class="prompt">$ </span><span class="cmd">git init</span><br>
+        <span class="output success">Initialized empty Git repository in ~/Desktop/my-project/.git/</span><br><br>
+
+        <span class="comment"># ③ GitHubと紐付ける</span><br>
+        <span class="prompt">$ </span><span class="cmd">git remote add origin https://github.com/あなたのID/my-project.git</span><br><br>
+
+        <span class="comment"># ④ 全ファイルを「送る準備」にする</span><br>
+        <span class="prompt">$ </span><span class="cmd">git add .</span><br>
+        <span class="comment"># 　↑ 「.」はフォルダ内の全ファイルという意味</span><br><br>
+
+        <span class="comment"># ⑤ 「なんのファイルを送るか」メモをつける</span><br>
+        <span class="prompt">$ </span><span class="cmd">git commit -m "最初のアップロード"</span><br>
+        <span class="output success">[main (root-commit)] 最初のアップロード</span><br>
+        <span class="output"> 1 file changed, 100 insertions(+)</span><br><br>
+
+        <span class="comment"># ⑥ GitHubに送信！</span><br>
+        <span class="prompt">$ </span><span class="cmd">git push -u origin main</span><br>
+        <span class="output success">✓ Branch 'main' set up to track 'origin/main'.</span>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="label">📌 各コマンドの意味</div>
+      <table style="width:100%; font-size:0.9em; border-collapse:collapse;">
+        <tr style="border-bottom:1px solid #bee3f8;">
+          <td style="padding:8px; font-family:monospace; color:#2b6cb0; white-space:nowrap; font-weight:600;">git init</td>
+          <td style="padding:8px;">このフォルダをgitで管理し始めます、という宣言</td>
+        </tr>
+        <tr style="border-bottom:1px solid #bee3f8;">
+          <td style="padding:8px; font-family:monospace; color:#2b6cb0; white-space:nowrap; font-weight:600;">git add .</td>
+          <td style="padding:8px;">フォルダの中の全ファイルを「送る荷物リスト」に追加</td>
+        </tr>
+        <tr style="border-bottom:1px solid #bee3f8;">
+          <td style="padding:8px; font-family:monospace; color:#2b6cb0; white-space:nowrap; font-weight:600;">git commit</td>
+          <td style="padding:8px;">荷物をまとめて箱詰めして、メモを貼る作業</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; font-family:monospace; color:#2b6cb0; white-space:nowrap; font-weight:600;">git push</td>
+          <td style="padding:8px;">箱をGitHubに発送！ここで初めてネットに上がります</td>
+        </tr>
+      </table>
+    </div>
+
+    <p>pushが完了すると、GitHubのページにファイルが表示されます👇</p>
+
+    <div class="github-mock">
+      <div class="github-topbar">
+        <div class="logo">⬛</div>
+        <div class="nav-item active">あなたのID / my-project</div>
+      </div>
+      <div class="github-content">
+        <div class="gh-repo-header">
+          <span class="gh-repo-icon">📁</span>
+          <span class="gh-repo-name">あなたのID / my-project</span>
+          <span style="background:#ddf4ff; color:#0550ae; font-size:11px; padding:2px 8px; border-radius:20px; font-weight:600;">Public</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-size:13px; color:#57606a;">🕐 最初のアップロード <strong style="color:#24292f;">3分前</strong></span>
+          <span class="gh-green-btn">↓ Code</span>
+        </div>
+        <div class="gh-file-list">
+          <div class="gh-file-item" style="background:#f6f8fa;">
+            <span style="font-size:13px; color:#57606a;">📄</span>
+            <span class="name" style="flex:none; color:#24292f; font-weight:600;">Name</span>
+            <span class="msg" style="flex:1;">Message</span>
+            <span class="time">Updated</span>
+          </div>
+          <div class="gh-file-item">
+            <span class="icon">📄</span>
+            <span class="name">index.html</span>
+            <span class="msg" style="flex:1;">最初のアップロード</span>
+            <span class="time">just now</span>
+          </div>
+          <div class="gh-file-item">
+            <span class="icon">🎨</span>
+            <span class="name">style.css</span>
+            <span class="msg" style="flex:1;">最初のアップロード</span>
+            <span class="time">just now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <div class="label">⚠️ 2回目以降のアップ（ファイルを更新したとき）</div>
+      2回目からは <code style="background:#fef3c7; padding:2px 6px; border-radius:4px;">git init</code> と <code style="background:#fef3c7; padding:2px 6px; border-radius:4px;">git remote add</code> は不要！<br>
+      <strong>git add . → git commit -m "メッセージ" → git push</strong> の3つだけでOK！
+    </div>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="section">
+  <div class="step-card" id="step4">
+    <div class="step-number">4</div>
+    <h2>STEP 4｜GitHub Pagesで公開する</h2>
+    <p class="subtitle">HTMLファイルをURLで誰でも見られるサイトとして公開します！</p>
+
+    <p>コマンド1行で、GitHub Pagesを有効化できます。</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <div class="title">ターミナル</div>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># GitHub Pagesを有効にする（mainブランチのルートを公開）</span><br>
+        <span class="prompt">$ </span><span class="cmd">gh api repos/あなたのID/my-project/pages \</span><br>
+        <span class="cmd">&nbsp;&nbsp;--method POST \</span><br>
+        <span class="cmd">&nbsp;&nbsp;--input - &lt;&lt;'EOF'</span><br>
+        <span class="cmd">{"source":{"branch":"main","path":"/"}}</span><br>
+        <span class="cmd">EOF</span><br><br>
+        <span class="output success">✓ Pages enabled!</span><br>
+        <span class="output url">"html_url": "https://あなたのID.github.io/my-project/"</span>
+      </div>
+    </div>
+
+    <p>GitHubの設定画面でも確認できます（Settings → Pages）👇</p>
+
+    <div class="github-mock">
+      <div class="github-topbar">
+        <div class="logo">⬛</div>
+        <div class="nav-item active">Settings</div>
+      </div>
+      <div class="github-content">
+        <div style="display:flex; gap:20px;">
+          <div style="width:160px; flex-shrink:0;">
+            <div style="font-size:12px; color:#57606a; font-weight:600; margin-bottom:8px;">OPTIONS</div>
+            <div style="font-size:13px; padding:6px 10px; border-radius:6px; margin-bottom:2px; color:#57606a;">General</div>
+            <div style="font-size:13px; padding:6px 10px; border-radius:6px; margin-bottom:2px; color:#57606a;">Branches</div>
+            <div style="font-size:13px; padding:6px 10px; border-radius:6px; background:#f0f4f8; color:#24292f; font-weight:600;">Pages</div>
+          </div>
+          <div style="flex:1;">
+            <h3 style="font-size:16px; margin-bottom:16px; color:#24292f;">GitHub Pages</h3>
+            <div class="pages-url-box">
+              <strong>🎉 Your site is published at</strong>
+              <a href="#">https://あなたのID.github.io/my-project/</a>
+            </div>
+            <div class="settings-mock" style="margin-top:16px;">
+              <div class="settings-header">Source</div>
+              <div class="settings-body">
+                <div class="settings-row">
+                  <span class="settings-label">Branch</span>
+                  <select class="settings-select"><option>main</option></select>
+                  <select class="settings-select"><option>/ (root)</option></select>
+                  <button class="settings-save">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="label">⏱️ 公開までのタイムライン</div>
+      設定後 <strong>1〜3分</strong> でURLが有効になります。すぐ開けなかったら少し待ってから試してみよう！
+    </div>
+
+    <div class="tip-box">
+      <div class="label">📌 公開URLのルール</div>
+      <code style="background:#ebf8ff; padding:2px 6px; border-radius:4px;">https://あなたのID.github.io/リポジトリ名/</code><br>
+      ※ リポジトリ名が「my-project」ならURLも「my-project」になります
+    </div>
+  </div>
+</div>
+
+<!-- 用語集 -->
+<div class="section" id="glossary">
+  <div class="glossary">
+    <h2>📖 用語集｜わからない言葉はここで確認</h2>
+
+    <div class="glossary-item">
+      <div class="glossary-term">リポジトリ</div>
+      <div class="glossary-desc"><strong>ファイルを管理する「プロジェクトの箱」。</strong>GitHubではリポジトリ＝プロジェクトの単位です。1つのサイトや1つのアプリで1つ作るのが基本。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">git init</div>
+      <div class="glossary-desc"><strong>「このフォルダをgitで管理しますよ」という宣言コマンド。</strong>フォルダの中に「.git」という隠しフォルダができます。最初の1回だけ実行すればOK。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">git add</div>
+      <div class="glossary-desc"><strong>「このファイルをGitHubに送る荷物リストに追加する」コマンド。</strong><code>git add .</code>で全ファイルを一気に追加できます。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">git commit</div>
+      <div class="glossary-desc"><strong>「荷物をまとめて箱詰め＋メモを貼る」作業。</strong>-m の後に「何を変えたか」を日本語でメモしておくと後でわかりやすい。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">git push</div>
+      <div class="glossary-desc"><strong>「箱をGitHubに発送する」コマンド。</strong>これを実行して初めてGitHubのサイト上にファイルが現れます。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">branch</div>
+      <div class="glossary-desc"><strong>コードの「作業ルート」のこと。</strong>デフォルトは「main」。今回はmainブランチだけ使えばOK！</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">GitHub Pages</div>
+      <div class="glossary-desc"><strong>GitHubのリポジトリにあるHTMLを、Webサイトとして無料公開できる機能。</strong>https://ユーザーID.github.io/リポジトリ名/ というURLが発行されます。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">gh CLI</div>
+      <div class="glossary-desc"><strong>GitHubをターミナルから操作するための公式ツール。</strong>ブラウザを開かなくてもリポジトリ作成やPages設定ができて便利！</div>
+    </div>
+  </div>
+</div>
+
+<!-- まとめ -->
+<div class="section">
+  <div class="summary">
+    <h2>🎉 全体の流れまとめ</h2>
+    <div class="summary-steps">
+      <div class="summary-step"><span class="num">①</span>gh repo create でリポジトリ作成</div>
+      <div class="summary-step"><span class="num">②</span>git init で管理開始</div>
+      <div class="summary-step"><span class="num">③</span>git remote add で紐付け</div>
+      <div class="summary-step"><span class="num">④</span>git add . で準備</div>
+      <div class="summary-step"><span class="num">⑤</span>git commit でメモ付き箱詰め</div>
+      <div class="summary-step"><span class="num">⑥</span>git push で送信！</div>
+      <div class="summary-step"><span class="num">⑦</span>GitHub Pages で公開🌐</div>
+    </div>
+    <p>2回目以降は ④〜⑥ の3ステップだけでOK！慣れたらすぐできるようになるよ💪</p>
+  </div>
+</div>
+
+<footer>
+  © 2025 GGPL GitHub マニュアル｜初心者向けガイド
+</footer>
+
+</body>
+</html>
