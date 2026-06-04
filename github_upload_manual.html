@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHubにコードをアップする方法｜初心者向けマニュアル</title>
+  <title>GitHubにコードをアップする方法｜初心者向けマニュアル（Mac / Windows対応）</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -443,7 +443,11 @@
 <header>
   <div class="badge">🔰 初心者向けマニュアル</div>
   <h1>GitHubにコードを<br>アップする方法</h1>
-  <p>ターミナルを使って、自分のファイルをGitHubに公開するまでの全手順をやさしく解説！</p>
+  <p>ターミナル（Mac）・コマンドプロンプト（Windows）を使って、自分のファイルをGitHubに公開するまでの全手順をやさしく解説！</p>
+  <div style="display:inline-flex; gap:12px; margin-top:20px; flex-wrap:wrap; justify-content:center;">
+    <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:5px 16px; font-size:13px;">🍎 Mac対応</span>
+    <span style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:20px; padding:5px 16px; font-size:13px;">🪟 Windows対応</span>
+  </div>
 </header>
 
 <!-- 目次 -->
@@ -501,14 +505,42 @@
     <h2>STEP 1｜事前準備を確認する</h2>
     <p class="subtitle">まずターミナルを開いて、必要なツールが入っているか確認しよう</p>
 
-    <p>ターミナルを開いたら、以下のコマンドを入力してEnterを押してみよう。</p>
+    <p>まず黒い画面（ターミナル / コマンドプロンプト）を開こう。</p>
+
+    <!-- OS別の開き方 -->
+    <div style="display:flex; gap:14px; flex-wrap:wrap; margin:16px 0;">
+      <div style="flex:1; min-width:220px; background:#f6f8fa; border:1px solid #d0d7de; border-radius:12px; padding:18px;">
+        <div style="font-size:1.3em; margin-bottom:6px;">🍎 Macの場合</div>
+        <strong style="font-size:0.95em;">「ターミナル」を開く</strong>
+        <p style="font-size:0.88em; color:#57606a; margin-top:6px;">
+          Spotlight（⌘ + スペース）を押して<br>
+          「ターミナル」と入力 → Enter
+        </p>
+      </div>
+      <div style="flex:1; min-width:220px; background:#f0f7ff; border:1px solid #b6d4fe; border-radius:12px; padding:18px;">
+        <div style="font-size:1.3em; margin-bottom:6px;">🪟 Windowsの場合</div>
+        <strong style="font-size:0.95em;">「コマンドプロンプト」を開く</strong>
+        <p style="font-size:0.88em; color:#57606a; margin-top:6px;">
+          Windowsキー + R を押して<br>
+          「cmd」と入力 → Enter<br>
+          <span style="color:#0969da;">または「スタート」→「コマンドプロンプト」</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="label">💡 コマンドはMacもWindowsも同じ！</div>
+      git や gh のコマンドはどちらのOSでもまったく同じです。安心して進めよう！
+    </div>
+
+    <p>黒い画面が開けたら、以下のコマンドを入力してEnterを押してみよう。</p>
 
     <div class="terminal">
       <div class="terminal-bar">
         <div class="dot dot-red"></div>
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
-        <div class="title">ターミナル</div>
+        <div class="title">ターミナル（Mac）/ コマンドプロンプト（Windows）</div>
       </div>
       <div class="terminal-body">
         <span class="comment"># gitが入っているか確認</span><br>
@@ -533,8 +565,9 @@
     <div class="warn-box">
       <div class="label">⚠️ 「command not found」と出たら？</div>
       gitやghがインストールされていません。<br>
-      <strong>git：</strong><a href="https://git-scm.com" style="color:#c05621;">https://git-scm.com</a> からインストール<br>
-      <strong>gh：</strong><a href="https://cli.github.com" style="color:#c05621;">https://cli.github.com</a> からインストール
+      <strong>git：</strong><a href="https://git-scm.com" style="color:#c05621;">https://git-scm.com</a> からインストール（Mac / Windows両対応）<br>
+      <strong>gh：</strong><a href="https://cli.github.com" style="color:#c05621;">https://cli.github.com</a> からインストール（Mac / Windows両対応）<br><br>
+      🪟 <strong>Windowsの方へ：</strong>インストール後は<strong>コマンドプロンプトを再起動</strong>してから確認コマンドを入力してね！
     </div>
 
     <p>ログインしていない場合は以下のコマンドでログインできます：</p>
@@ -544,7 +577,7 @@
         <div class="dot dot-red"></div>
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
-        <div class="title">ターミナル</div>
+        <div class="title">ターミナル（Mac）/ コマンドプロンプト（Windows）</div>
       </div>
       <div class="terminal-body">
         <span class="prompt">$ </span><span class="cmd">gh auth login</span><br>
@@ -571,7 +604,7 @@
         <div class="dot dot-red"></div>
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
-        <div class="title">ターミナル</div>
+        <div class="title">ターミナル（Mac）/ コマンドプロンプト（Windows）</div>
       </div>
       <div class="terminal-body">
         <span class="comment"># --public = 誰でも見られる公開設定</span><br>
@@ -632,7 +665,7 @@
         <div class="dot dot-red"></div>
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
-        <div class="title">ターミナル</div>
+        <div class="title">ターミナル（Mac）/ コマンドプロンプト（Windows）</div>
       </div>
       <div class="terminal-body">
         <span class="comment"># ① アップしたいフォルダに移動する</span><br>
@@ -745,7 +778,7 @@
         <div class="dot dot-red"></div>
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
-        <div class="title">ターミナル</div>
+        <div class="title">ターミナル（Mac）/ コマンドプロンプト（Windows）</div>
       </div>
       <div class="terminal-body">
         <span class="comment"># GitHub Pagesを有効にする（mainブランチのルートを公開）</span><br>
@@ -845,6 +878,14 @@
     <div class="glossary-item">
       <div class="glossary-term">gh CLI</div>
       <div class="glossary-desc"><strong>GitHubをターミナルから操作するための公式ツール。</strong>ブラウザを開かなくてもリポジトリ作成やPages設定ができて便利！</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">ターミナル</div>
+      <div class="glossary-desc"><strong>Macでコマンドを入力する黒い画面のこと。</strong>「アプリケーション → ユーティリティ → ターミナル」または Spotlight（⌘+スペース）で「ターミナル」と検索して開きます。</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">コマンドプロンプト</div>
+      <div class="glossary-desc"><strong>Windowsでコマンドを入力する黒い画面のこと。</strong>「Windowsキー + R」を押して「cmd」と入力するか、スタートメニューで「コマンドプロンプト」と検索して開きます。<br>PowerShellでも同じコマンドが使えます！</div>
     </div>
   </div>
 </div>
