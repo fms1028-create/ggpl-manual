@@ -681,6 +681,9 @@
   <div class="nav-tab active" onclick="showTab('overview')">
     <span>📋</span> 概要
   </div>
+  <div class="nav-tab" onclick="showTab('trouble')">
+    <span>🛠️</span> トラブルシュート
+  </div>
   <div class="nav-tab" onclick="showTab('zero')">
     <div class="tab-num">①</div> 残コイン処理
   </div>
@@ -731,6 +734,80 @@
     <div class="alert alert-info">
       <span class="alert-icon">💡</span>
       <div><strong>共通ルール：</strong>全ツールとも「完了」と表示されたらターミナルを閉じてOKです。最後は必ず目視で確認してください。</div>
+    </div>
+  </div>
+
+  <!-- トラブルシュート -->
+  <div id="section-trouble" class="section">
+    <div style="border:2px solid #ffc107;border-radius:14px;overflow:hidden;">
+      <div style="background:#ffc107;padding:12px 20px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">🛠️</span>
+        <div>
+          <div style="font-size:15px;font-weight:900;color:#212529;">トラブルシュート（Windows版）</div>
+          <div style="font-size:12px;color:#5a4500;">コマンドプロンプト実行時にエラーが出た場合</div>
+        </div>
+      </div>
+      <div style="padding:20px;background:#fffdf0;">
+
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:700;color:#856404;margin-bottom:6px;">▼ このエラーが出たとき</div>
+          <div style="background:#1a1a2e;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff6b6b;line-height:1.8;">
+            google.auth.exceptions.RefreshError:<br>
+            ('invalid_grant: Token has been expired or revoked.',<br>
+            {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
+          </div>
+        </div>
+
+        <div style="font-size:13px;font-weight:700;color:#212529;margin-bottom:12px;">📋 対処手順</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;">スクリプトのフォルダを開く</div>
+              <div style="font-size:12px;color:#555;margin-top:2px;">Downloadsフォルダ内の <strong>RingChipAutoDeposit_Windows</strong> フォルダをダブルクリックして開く</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;"><code style="background:#fff3cd;padding:1px 6px;border-radius:4px;font-size:12px;">token.json</code> を削除する</div>
+              <div style="font-size:12px;color:#555;margin-top:2px;">フォルダ内に <strong>token.json</strong> というファイルがあるので右クリック → 削除する</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;">スクリプトをもう一度実行する</div>
+              <div style="font-size:12px;color:#555;margin-top:2px;"><strong>run.bat</strong> をダブルクリックして再実行する</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">4</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;">ブラウザでGoogleアカウントにログインする</div>
+              <div style="font-size:12px;color:#555;margin-top:2px;">自動でブラウザが開くので、店舗のGoogleアカウントでログインする。完了すると新しい <strong>token.json</strong> が自動生成される</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="background:#2a9d8f;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">5</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;">処理が再開されることを確認する</div>
+              <div style="font-size:12px;color:#555;margin-top:2px;">ログイン後、コマンドプロンプトに処理が戻り「完了: 成功=○件 / エラー=○件」が表示されたら完了</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:16px;background:#fff0f1;border:1.5px solid #ffb3b8;border-radius:8px;padding:10px 14px;font-size:12px;color:#842029;">
+          <strong>⚠️ 注意：</strong> このエラーはトークンの有効期限切れが原因です。token.json を削除して再認証すれば解決します。コードや設定に問題はありません。
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -861,6 +938,11 @@
       <div class="sts-step"><span class="sts-num">4</span>「完了：保存=○件」が表示されたらターミナルを閉じる</div>
       <div class="sts-step"><span class="sts-num">5</span>PokerWebでプレイヤーリストを目視確認する</div>
     </div>
+    <div style="margin-top:12px;">
+      <button onclick="showTab('trouble')" style="display:inline-flex;align-items:center;gap:6px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;color:#856404;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">
+        🛠️ エラーが出た場合はトラブルシュートへ
+      </button>
+    </div>
   </div>
 
   <!-- ② トナメランキング集計 -->
@@ -983,6 +1065,11 @@
       <div class="sts-step"><span class="sts-num">3</span>ターミナルとPokerWebが自動起動 → トーナメント結果を自動取得</div>
       <div class="sts-step"><span class="sts-num">4</span>「完了」が表示されたらターミナルを閉じる</div>
       <div class="sts-step"><span class="sts-num">5</span>スプシの当月シートで集計結果を目視確認する</div>
+    </div>
+    <div style="margin-top:12px;">
+      <button onclick="showTab('trouble')" style="display:inline-flex;align-items:center;gap:6px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;color:#856404;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">
+        🛠️ エラーが出た場合はトラブルシュートへ
+      </button>
     </div>
   </div>
 
@@ -1169,9 +1256,9 @@
           </div>
 
           <div style="margin-top:16px;">
-            <a href="#ring-troubleshoot" style="display:inline-flex;align-items:center;gap:6px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;color:#856404;text-decoration:none;" onclick="document.getElementById('ring-troubleshoot').scrollIntoView({behavior:'smooth'});return false;">
-              ⚠️ エラーが出た場合は下へ ↓
-            </a>
+            <button onclick="showTab('trouble')" style="display:inline-flex;align-items:center;gap:6px;background:#fff3cd;border:1.5px solid #ffc107;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;color:#856404;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">
+              🛠️ エラーが出た場合はトラブルシュートへ
+            </button>
           </div>
 
         </div>
@@ -1191,78 +1278,6 @@
       <div class="sts-step"><span class="sts-num">8</span>PokerWebで目視確認する</div>
     </div>
 
-    <!-- TROUBLESHOOT -->
-    <div id="ring-troubleshoot" style="margin-top:32px;border:2px solid #ffc107;border-radius:14px;overflow:hidden;">
-      <div style="background:#ffc107;padding:12px 20px;display:flex;align-items:center;gap:10px;">
-        <span style="font-size:20px;">🛠️</span>
-        <div>
-          <div style="font-size:15px;font-weight:900;color:#212529;">トラブルシュート（Windows版）</div>
-          <div style="font-size:12px;color:#5a4500;">コマンドプロンプト実行時にエラーが出た場合</div>
-        </div>
-      </div>
-      <div style="padding:20px;background:#fffdf0;">
-
-        <div style="margin-bottom:16px;">
-          <div style="font-size:13px;font-weight:700;color:#856404;margin-bottom:6px;">▼ このエラーが出たとき</div>
-          <div style="background:#1a1a2e;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff6b6b;line-height:1.8;">
-            google.auth.exceptions.RefreshError:<br>
-            ('invalid_grant: Token has been expired or revoked.',<br>
-            {'error': 'invalid_grant', 'error_description': 'Token has been expired or revoked.'})
-          </div>
-        </div>
-
-        <div style="font-size:13px;font-weight:700;color:#212529;margin-bottom:12px;">📋 対処手順</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;">スクリプトのフォルダを開く</div>
-              <div style="font-size:12px;color:#555;margin-top:2px;">Downloadsフォルダ内の <strong>RingChipAutoDeposit_Windows</strong> フォルダをダブルクリックして開く</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;"><code style="background:#fff3cd;padding:1px 6px;border-radius:4px;font-size:12px;">token.json</code> を削除する</div>
-              <div style="font-size:12px;color:#555;margin-top:2px;">フォルダ内に <strong>token.json</strong> というファイルがあるので右クリック → 削除する</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;">スクリプトをもう一度実行する</div>
-              <div style="font-size:12px;color:#555;margin-top:2px;"><strong>run.bat</strong> をダブルクリックして再実行する</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="background:#856404;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">4</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;">ブラウザでGoogleアカウントにログインする</div>
-              <div style="font-size:12px;color:#555;margin-top:2px;">自動でブラウザが開くので、店舗のGoogleアカウントでログインする。完了すると新しい <strong>token.json</strong> が自動生成される</div>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;align-items:flex-start;">
-            <div style="background:#2a9d8f;color:white;font-weight:900;font-size:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">5</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;">処理が再開されることを確認する</div>
-              <div style="font-size:12px;color:#555;margin-top:2px;">ログイン後、コマンドプロンプトに処理が戻り「完了: 成功=○件 / エラー=○件」が表示されたら完了</div>
-            </div>
-          </div>
-
-        </div>
-
-        <div style="margin-top:16px;background:#fff0f1;border:1.5px solid #ffb3b8;border-radius:8px;padding:10px 14px;font-size:12px;color:#842029;">
-          <strong>⚠️ 注意：</strong> このエラーはトークンの有効期限切れが原因です。token.json を削除して再認証すれば解決します。コードや設定に問題はありません。
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
 </div><!-- /content -->
@@ -1273,7 +1288,7 @@ function showTab(id) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
   const tabs = document.querySelectorAll('.nav-tab');
-  const map = { overview: 0, zero: 1, ranking: 2, ring: 3 };
+  const map = { overview: 0, trouble: 1, zero: 2, ranking: 3, ring: 4 };
   tabs[map[id]].classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
