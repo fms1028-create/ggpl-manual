@@ -681,9 +681,6 @@
   <div class="nav-tab active" onclick="showTab('overview')">
     <span>📋</span> 概要
   </div>
-  <div class="nav-tab" onclick="showTab('trouble')">
-    <span>🛠️</span> トラブルシュート
-  </div>
   <div class="nav-tab" onclick="showTab('zero')">
     <div class="tab-num">①</div> 残コイン処理
   </div>
@@ -692,6 +689,9 @@
   </div>
   <div class="nav-tab" onclick="showTab('ring')">
     <div class="tab-num">③</div> リング預け額PW記載
+  </div>
+  <div class="nav-tab" onclick="showTab('trouble')">
+    <span>🛠️</span> トラブルシュート
   </div>
 </div>
 
@@ -743,7 +743,7 @@
       <div style="background:#ffc107;padding:12px 20px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:20px;">🛠️</span>
         <div>
-          <div style="font-size:15px;font-weight:900;color:#212529;">トラブルシュート（Windows版）</div>
+          <div style="font-size:15px;font-weight:900;color:#212529;">トラブルシュート</div>
           <div style="font-size:12px;color:#5a4500;">コマンドプロンプト実行時にエラーが出た場合</div>
         </div>
       </div>
@@ -1288,7 +1288,7 @@ function showTab(id) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
   const tabs = document.querySelectorAll('.nav-tab');
-  const map = { overview: 0, trouble: 1, zero: 2, ranking: 3, ring: 4 };
+  const map = { overview: 0, zero: 1, ranking: 2, ring: 3, trouble: 4 };
   tabs[map[id]].classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
